@@ -1,0 +1,37 @@
+{{template "header"}}
+
+<h1>Results</h1>
+
+<b>Status:</b> {{.Status}}
+
+{{- if ne .Status "PENDING" -}}
+
+    {{$result := .Result}}
+    <p><b>Summary:</b> {{$result.Summary}}</p>
+
+    {{- if eq 0 (len $result.FoundErrors) -}}
+        <p>No broken links found! 🎉</p>
+    {{- end -}}
+
+    {{- range $i, $v := $result.FoundErrors -}}
+    <b>Link:</b> {{$i}}<br>
+    <ul>
+        <li><b>ParentURL:</b> <a target="_blank" href="{{$v.ParentURL}}">{{$v.ParentURL}}</a></li>
+        <li><b>Link Text:</b> <code>{{$v.Name}}</code></li>
+        <li><b>Broken URL:</b> <code>{{$v.RealURL}}</code></li>
+        <li><b>Error:</b> <code>{{$v.CheckingResult}}</code></li>
+    </ul>
+    {{- end -}}
+
+{{- end -}}
+
+{{- if eq .Status "PENDING" -}}
+<script type="text/javascript">
+    // Reload the page every 5 seconds
+    setTimeout(function(){
+        window.location.reload(1);
+    }, 5000);
+</script>
+{{- end -}}
+
+{{template "footer"}}
