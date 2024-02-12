@@ -1,3 +1,5 @@
-# fido
+# fido 🐶
 
-WIP: Website to check your website for broken links!
+Fido is a website to check your sites for broken links.
+
+codeberg.org/meadowingc/fido
