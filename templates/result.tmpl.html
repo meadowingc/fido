@@ -4,8 +4,11 @@
 
 <b>Status:</b> {{.Status}}
 
-{{- if ne .Status "PENDING" -}}
+{{$howOftenToRefresh := 5}}
 
+{{- if eq .Status "PENDING" -}}
+    <p>This page will refresh every {{$howOftenToRefresh}} seconds until results become available.</p>
+{{- else -}}
     {{$result := .Result}}
     <p><b>Summary:</b> {{$result.Summary}}</p>
 
@@ -22,15 +25,14 @@
         <li><b>Error:</b> <code>{{$v.CheckingResult}}</code></li>
     </ul>
     {{- end -}}
-
 {{- end -}}
 
 {{- if eq .Status "PENDING" -}}
 <script type="text/javascript">
-    // Reload the page every 5 seconds
+    // Reload the page every {{$howOftenToRefresh}} seconds
     setTimeout(function(){
         window.location.reload(1);
-    }, 5000);
+    }, {{$howOftenToRefresh}} * 1000);
 </script>
 {{- end -}}
 
