@@ -57,9 +57,9 @@ func SubmitLinkForCheck(link string) string {
 		uidToResultMap[uid].Status = "COMPLETED"
 		mapLock.Unlock()
 
-		// keep the results around for 24 hours and then remove from the map
+		// keep the results around for a while and then remove from the map
 		go func() {
-			<-time.After(24 * time.Hour)
+			<-time.After(2 * 24 * time.Hour)
 			mapLock.Lock()
 			delete(uidToResultMap, uid)
 			mapLock.Unlock()

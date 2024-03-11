@@ -1,11 +1,17 @@
 {{template "header"}}
 
-<h1>Fido 🐶!</h1>
+<div class="container">
+    <h1>Welcome to Fido 🐶!</h1>
+    <p>Find any broken links on your site.</p>
 
-<form action="/submit-eval-request" method="post">
-    <label for="link">Link:</label><br>
-    <input type="text" id="link" name="link"><br>
-    <input type="submit" value="Submit">
-</form>
+    <form action="/submit-eval-request" method="post">
+        <input type="text" id="link" name="link" placeholder="Enter a URL to check">
+        <input type="submit" value="Submit">
+    </form>
+
+    <p>
+        <small>This is an open source project. Check out the code <a href="https://codeberg.org/meadowingc/fido">here</a>!</small>
+    </p>
+</div>
 
 {{template "footer"}}

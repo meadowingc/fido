@@ -1,31 +1,38 @@
 {{template "header"}}
 
-<h1>Results</h1>
+<div class="container results">
+    <h1>Results</h1>
 
-<b>Status:</b> {{.Status}}
+    <b>Status:</b> {{.Status}}
 
-{{$howOftenToRefresh := 5}}
+    {{$howOftenToRefresh := 5}}
 
-{{- if eq .Status "PENDING" -}}
-    <p>This page will refresh every {{$howOftenToRefresh}} seconds until results become available.</p>
-{{- else -}}
-    {{$result := .Result}}
-    <p><b>Summary:</b> {{$result.Summary}}</p>
+    {{- if eq .Status "PENDING" -}}
+        <p>This page will refresh every {{$howOftenToRefresh}} seconds until results become available.</p>
+    {{- else -}}
+        {{$result := .Result}}
+        <p><b>Summary:</b> {{$result.Summary}}</p>
 
-    {{- if eq 0 (len $result.FoundErrors) -}}
-        <p>No broken links found! 🎉</p>
+        {{- if eq 0 (len $result.FoundErrors) -}}
+            <p>No broken links found! 🎉</p>
+        {{- end -}}
+
+        {{- range $i, $v := $result.FoundErrors -}}
+        <div><b>Broken Link</b> {{add $i 1}}<br></div>
+        <ul>
+            <li><b>Parent URL:</b> <a target="_blank" href="{{$v.ParentURL}}">{{$v.ParentURL}}</a></li>
+            <li><b>Link Text:</b> <code>{{$v.Name}}</code></li>
+            <li><b>Broken URL:</b> <code>{{$v.RealURL}}</code></li>
+            <li><b>Error:</b> <code>{{$v.CheckingResult}}</code></li>
+        </ul>
+        {{- end -}}
+
+
+        <p>
+            <a href="/">Submit another link</a>
+        </p>
     {{- end -}}
-
-    {{- range $i, $v := $result.FoundErrors -}}
-    <b>Link:</b> {{$i}}<br>
-    <ul>
-        <li><b>ParentURL:</b> <a target="_blank" href="{{$v.ParentURL}}">{{$v.ParentURL}}</a></li>
-        <li><b>Link Text:</b> <code>{{$v.Name}}</code></li>
-        <li><b>Broken URL:</b> <code>{{$v.RealURL}}</code></li>
-        <li><b>Error:</b> <code>{{$v.CheckingResult}}</code></li>
-    </ul>
-    {{- end -}}
-{{- end -}}
+</div>
 
 {{- if eq .Status "PENDING" -}}
 <script type="text/javascript">

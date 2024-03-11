@@ -9,7 +9,11 @@ import (
 )
 
 func main() {
-	templates := template.Must(template.ParseGlob("templates/*.tmpl.html"))
+	templates := template.Must(template.New("").Funcs(template.FuncMap{
+		"add": func(a, b int) int {
+			return a + b
+		},
+	}).ParseGlob("templates/*.tmpl.html"))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		err := templates.ExecuteTemplate(w, "home.tmpl.html", nil)
@@ -43,8 +47,6 @@ func main() {
 			return
 		}
 
-		// TODO remove this
-		templates = template.Must(template.ParseGlob("templates/*.tmpl.html"))
 		err := templates.ExecuteTemplate(w, "result.tmpl.html", result)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -55,6 +57,7 @@ func main() {
 		fmt.Fprintf(w, "Welcome to the contact page!")
 	})
 
-	fmt.Println("Server is running on http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	const serverPort = 8624
+	fmt.Printf("Server is running on localhost:%d\n", serverPort)
+	http.ListenAndServe(fmt.Sprintf(":%d", serverPort), nil)
 }
