@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strings"
 
 	"codeberg.org/meadowingc/fido/linkchecker"
 )
@@ -28,6 +29,12 @@ func main() {
 		submittedLink := r.FormValue("link")
 		if submittedLink == "" {
 			http.Error(w, "Link is required", http.StatusBadRequest)
+			return
+		}
+
+		// Check if the submitted link starts with http:// or https://
+		if !strings.HasPrefix(submittedLink, "http://") && !strings.HasPrefix(submittedLink, "https://") {
+			http.Error(w, "Invalid link. Link must start with http:// or https://", http.StatusBadRequest)
 			return
 		}
 
