@@ -3,13 +3,21 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"os/exec"
 	"strings"
 
 	"codeberg.org/meadowingc/fido/linkchecker"
 )
 
 func main() {
+	// check that `linkchecker` is actually found on PATH
+	_, err := exec.LookPath("linkchecker")
+	if err != nil {
+		log.Fatalf("linkchecker is not found in system's PATH: %v", err)
+	}
+
 	templates := template.Must(template.New("").Funcs(template.FuncMap{
 		"add": func(a, b int) int {
 			return a + b
@@ -46,6 +54,12 @@ func main() {
 
 	http.HandleFunc("/result/{operation_id}", func(w http.ResponseWriter, r *http.Request) {
 		opId := r.PathValue("operation_id")
+
+		templates = template.Must(template.New("").Funcs(template.FuncMap{
+			"add": func(a, b int) int {
+				return a + b
+			},
+		}).ParseGlob("templates/*.tmpl.html"))
 
 		// get result for operation ID
 		result := linkchecker.GetResultForUUID(opId)
