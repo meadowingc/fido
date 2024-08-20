@@ -2,6 +2,7 @@
 
 # run forever, even if we fail
 while true; do
-    go run .
+    git pull
+    go run -tags release .    
     sleep 1
 done
